@@ -32,14 +32,6 @@ func (process *VProcess) Quit() {
 	rl.CloseWindow()
 }
 
-func (process *VProcess) startRenderLoop() {
-	for !rl.WindowShouldClose() {
-		rl.BeginDrawing()
-		rl.ClearBackground(rl.White)
-		rl.EndDrawing()
-	}
-}
-
 func (process *VProcess) Run() {
 	process.startRenderLoop()
 }

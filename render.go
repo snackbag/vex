@@ -1,0 +1,11 @@
+package vex
+
+import rl "github.com/gen2brain/raylib-go/raylib"
+
+func (process *VProcess) startRenderLoop() {
+	for !rl.WindowShouldClose() {
+		rl.BeginDrawing()
+		rl.ClearBackground(process.BackgroundColor)
+		rl.EndDrawing()
+	}
+}
