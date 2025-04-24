@@ -1,21 +1,42 @@
 package vex
 
+import rl "github.com/gen2brain/raylib-go/raylib"
+
 var hasProcess = false
 
 type VProcess struct {
 	Title  string
-	Width  int
-	Height int
+	Width  int32
+	Height int32
 
 	widgets []VWidget
 }
 
-func Boot(title string, width int, height int) *VProcess {
+func (process *VProcess) Show() {
+	process.SetVisibility(true)
+}
+
+func (process *VProcess) Hide() {
+	process.SetVisibility(false)
+}
+
+func (process *VProcess) SetVisibility(visibility bool) {
+	if !visibility {
+		rl.SetWindowState(rl.FlagWindowHidden)
+	} else {
+		rl.ClearWindowState(rl.FlagWindowHidden)
+	}
+}
+
+func Boot(title string, width int32, height int32) *VProcess {
 	if hasProcess {
 		panic("Cannot create multiple Vex processes")
 	}
 
 	val := &VProcess{title, width, height, make([]VWidget, 0)}
 	hasProcess = true
+
+	rl.InitWindow(width, height, title)
+	rl.SetTargetFPS(60)
 	return val
 }
