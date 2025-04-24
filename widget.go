@@ -1,5 +1,10 @@
 package vex
 
 type VWidget interface {
-	GetApp()
+	Render(process *VProcess)
+
+	X() int
+	Y() int
+	Width() int
+	Height() int
 }
