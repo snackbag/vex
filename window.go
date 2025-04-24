@@ -52,6 +52,7 @@ func Init(title string, width int32, height int32) *VProcess {
 	val := &VProcess{title, width, height, make([]VWidget, 0)}
 	hasProcess = true
 
+	rl.SetTraceLogLevel(rl.LogError)
 	rl.InitWindow(width, height, title)
 	rl.SetTargetFPS(60)
 	return val
