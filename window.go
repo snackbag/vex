@@ -1,6 +1,9 @@
 package vex
 
-import rl "github.com/gen2brain/raylib-go/raylib"
+import (
+	rl "github.com/gen2brain/raylib-go/raylib"
+	"image/color"
+)
 
 var hasProcess = false
 
@@ -8,6 +11,8 @@ type VProcess struct {
 	Title  string
 	Width  int32
 	Height int32
+
+	BackgroundColor color.RGBA
 
 	widgets []VWidget
 }
@@ -41,7 +46,7 @@ func Init(title string, width int32, height int32) *VProcess {
 		panic("Cannot create multiple Vex processes")
 	}
 
-	val := &VProcess{title, width, height, make([]VWidget, 0)}
+	val := &VProcess{title, width, height, ColorAll(255), make([]VWidget, 0)}
 	hasProcess = true
 
 	rl.SetTraceLogLevel(rl.LogError)
