@@ -1,1 +1,1 @@
-module vex
+module github.com/snackbag/vex
