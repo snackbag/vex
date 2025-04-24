@@ -21,14 +21,30 @@ func (process *VProcess) Hide() {
 }
 
 func (process *VProcess) SetVisibility(visibility bool) {
-	if !visibility {
-		rl.SetWindowState(rl.FlagWindowHidden)
-	} else {
-		rl.ClearWindowState(rl.FlagWindowHidden)
+	setWindowState(rl.FlagWindowHidden, visibility)
+}
+
+func (process *VProcess) SetAllowResize(allow bool) {
+	setWindowState(rl.FlagWindowResizable, allow)
+}
+
+func (process *VProcess) Quit() {
+	rl.CloseWindow()
+}
+
+func (process *VProcess) startRenderLoop() {
+	for !rl.WindowShouldClose() {
+		rl.BeginDrawing()
+		rl.ClearBackground(rl.White)
+		rl.EndDrawing()
 	}
 }
 
-func Boot(title string, width int32, height int32) *VProcess {
+func (process *VProcess) Run() {
+	process.startRenderLoop()
+}
+
+func Init(title string, width int32, height int32) *VProcess {
 	if hasProcess {
 		panic("Cannot create multiple Vex processes")
 	}
