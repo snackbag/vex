@@ -9,3 +9,7 @@ func setWindowState(flag uint32, allow bool) {
 		rl.ClearWindowState(flag)
 	}
 }
+
+func GetFPS() int {
+	return int(rl.GetFPS())
+}
