@@ -1,5 +1,7 @@
 package vex
 
+import "image/color"
+
 type VWidget interface {
 	Render()
 
@@ -14,15 +16,23 @@ type VWidget interface {
 	Height() int32
 
 	GetClasses() []string
+	SetStyle(key string, value interface{})
+	GetStyle(key string) interface{}
+	GetStyleAsColor(key string) color.RGBA
 }
 
 type VBaseWidget struct {
+	VWidget
+
 	x      int32
 	y      int32
 	width  int32
 	height int32
 
 	classes []string
+}
+
+func (w *VBaseWidget) Render() {
 }
 
 func (w *VBaseWidget) X() int32 {
@@ -65,4 +75,16 @@ func (w *VBaseWidget) Height() int32 {
 
 func (w *VBaseWidget) GetClasses() []string {
 	return w.classes
+}
+
+func (w *VBaseWidget) SetStyle(key string, value interface{}) {
+	Process.StyleSheet.SetKey(&w.VWidget, key, value)
+}
+
+func (w *VBaseWidget) GetStyle(key string) interface{} {
+	return Process.StyleSheet.GetKeyRaw(&w.VWidget, key)
+}
+
+func (w *VBaseWidget) GetStyleAsColor(key string) color.RGBA {
+	return Process.StyleSheet.GetKeyAsColor(&w.VWidget, key)
 }
