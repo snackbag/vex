@@ -41,6 +41,10 @@ func (process *VProcess) Run() {
 	process.startRenderLoop()
 }
 
+func (process *VProcess) AddWidget(widget VWidget) {
+	process.widgets = append(process.widgets, widget)
+}
+
 func Init(title string, width int32, height int32) *VProcess {
 	if hasProcess {
 		panic("Cannot create multiple Vex processes")
