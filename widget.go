@@ -88,3 +88,15 @@ func (w *VBaseWidget) GetStyle(key string) interface{} {
 func (w *VBaseWidget) GetStyleAsColor(key string) color.RGBA {
 	return Process.StyleSheet.GetKeyAsColor(&w.VWidget, key)
 }
+
+func (w *VBaseWidget) GetStyleAsInt(key string) int {
+	return Process.StyleSheet.GetKeyAsInt(&w.VWidget, key)
+}
+
+func (w *VBaseWidget) GetStyleAsFloat32(key string) float32 {
+	return Process.StyleSheet.GetKeyAsFloat32(&w.VWidget, key)
+}
+
+func (w *VBaseWidget) GetStyleAsFloat64(key string) float64 {
+	return Process.StyleSheet.GetKeyAsFloat64(&w.VWidget, key)
+}
