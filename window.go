@@ -13,6 +13,7 @@ type VProcess struct {
 	Height int32
 
 	BackgroundColor color.RGBA
+	StyleSheet      *VStyleSheet
 
 	widgets []VWidget
 }
@@ -50,8 +51,9 @@ func Init(title string, width int32, height int32) *VProcess {
 		panic("Cannot create multiple Vex processes")
 	}
 
-	val := &VProcess{title, width, height, ColorAll(255), make([]VWidget, 0)}
+	val := &VProcess{title, width, height, ColorAll(255), newStyleSheet(), make([]VWidget, 0)}
 	Process = val
+	Process.StyleSheet.widgetSpecificStyles = make(map[*VWidget]map[string]interface{})
 
 	rl.SetTraceLogLevel(rl.LogError)
 	rl.InitWindow(width, height, title)
