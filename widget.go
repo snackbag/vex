@@ -1,12 +1,11 @@
 package vex
 
 type VWidget interface {
-	Render(process *VProcess)
+	Render()
 
 	X() int32
 	Y() int32
 	move(x int32, y int32)
-
 	SetWidth(width int32)
 	SetHeight(width int32)
 	SetSize(width int32, height int32)

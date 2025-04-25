@@ -11,7 +11,7 @@ type VRect struct {
 	Color color.RGBA
 }
 
-func (r *VRect) Render(process *VProcess) {
+func (r *VRect) Render() {
 	rl.DrawRectangle(r.X(), r.Y(), r.Width(), r.Height(), r.Color)
 }
 
