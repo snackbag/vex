@@ -12,6 +12,8 @@ type VWidget interface {
 	SetSizeAll(all int32)
 	Width() int32
 	Height() int32
+
+	GetClasses() []string
 }
 
 type VBaseWidget struct {
@@ -19,6 +21,8 @@ type VBaseWidget struct {
 	y      int32
 	width  int32
 	height int32
+
+	classes []string
 }
 
 func (w *VBaseWidget) X() int32 {
@@ -57,4 +61,8 @@ func (w *VBaseWidget) Width() int32 {
 
 func (w *VBaseWidget) Height() int32 {
 	return w.height
+}
+
+func (w *VBaseWidget) GetClasses() []string {
+	return w.classes
 }
