@@ -5,7 +5,7 @@ import (
 	"image/color"
 )
 
-var hasProcess = false
+var Process *VProcess = nil
 
 type VProcess struct {
 	Title  string
@@ -46,12 +46,12 @@ func (process *VProcess) AddWidget(widget VWidget) {
 }
 
 func Init(title string, width int32, height int32) *VProcess {
-	if hasProcess {
+	if Process != nil {
 		panic("Cannot create multiple Vex processes")
 	}
 
 	val := &VProcess{title, width, height, ColorAll(255), make([]VWidget, 0)}
-	hasProcess = true
+	Process = val
 
 	rl.SetTraceLogLevel(rl.LogError)
 	rl.InitWindow(width, height, title)
