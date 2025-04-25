@@ -27,7 +27,7 @@ func (process *VProcess) Hide() {
 }
 
 func (process *VProcess) SetVisibility(visibility bool) {
-	setWindowState(rl.FlagWindowHidden, visibility)
+	setWindowState(rl.FlagWindowHidden, !visibility)
 }
 
 func (process *VProcess) SetAllowResize(allow bool) {
