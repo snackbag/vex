@@ -8,7 +8,7 @@ func (process *VProcess) startRenderLoop() {
 		rl.ClearBackground(process.BackgroundColor)
 
 		for _, widget := range process.widgets {
-			widget.Render(process)
+			widget.Render()
 		}
 
 		rl.EndDrawing()
