@@ -6,6 +6,11 @@ func (process *VProcess) startRenderLoop() {
 	for !rl.WindowShouldClose() {
 		rl.BeginDrawing()
 		rl.ClearBackground(process.BackgroundColor)
+
+		for _, widget := range process.widgets {
+			widget.Render(process)
+		}
+
 		rl.EndDrawing()
 	}
 }
