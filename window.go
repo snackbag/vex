@@ -56,6 +56,7 @@ func Init(title string, width int32, height int32) *VProcess {
 	Process.StyleSheet.widgetSpecificStyles = make(map[*VWidget]map[string]interface{})
 
 	rl.SetTraceLogLevel(rl.LogError)
+	rl.SetConfigFlags(rl.FlagMsaa4xHint)
 	rl.InitWindow(width, height, title)
 	rl.SetTargetFPS(60)
 	return val
