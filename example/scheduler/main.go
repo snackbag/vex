@@ -18,6 +18,5 @@ func main() {
 		fmt.Println("Test from 3")
 	})
 
-	for {
-	}
+	select {}
 }
