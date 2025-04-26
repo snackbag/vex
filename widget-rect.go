@@ -30,7 +30,7 @@ func (r *VRect) Render() {
 }
 
 func NewRect(color color.RGBA) *VRect {
-	rect := &VRect{}
+	rect := &VRect{VBaseWidget: *NewBaseWidget()}
 	rect.width = 50
 	rect.height = 50
 

@@ -25,7 +25,7 @@ func (l *VLabel) Render() {
 }
 
 func NewLabel(text string) *VLabel {
-	label := &VLabel{Text: text}
+	label := &VLabel{VBaseWidget: *NewBaseWidget(), Text: text}
 	label.width = 100
 	label.height = 16
 

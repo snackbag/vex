@@ -48,7 +48,7 @@ func (i *VImage) GetPath() string {
 }
 
 func NewImage(path string) *VImage {
-	img := &VImage{}
+	img := &VImage{VBaseWidget: *NewBaseWidget()}
 
 	if err := img.SetPath(path); err != nil {
 		rl.TraceLog(rl.LogError, err.Error())
