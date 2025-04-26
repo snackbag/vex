@@ -7,7 +7,7 @@ This is not a finished project. Do not use it.
 - [X] Rectangle
 - [X] Label
 - [X] Images
-- [ ] Hover/Click listeners
+- [X] Hover/Click listeners
 - [ ] Animations
 - [ ] Keyboard input
 - [ ] Text wrapping
