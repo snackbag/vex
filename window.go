@@ -72,13 +72,14 @@ func (process *VProcess) GetLoadedFont(name string) *rl.Font {
 }
 
 // RegisterOrGetTexture gets the texture from cache if path is already registered
-func (process *VProcess) RegisterOrGetTexture(tex rl.Texture2D, path string) *rl.Texture2D {
+func (process *VProcess) RegisterOrGetTexture(path string, tex func() rl.Texture2D) *rl.Texture2D {
 	if reg, ok := process.textures[path]; ok {
 		reg.Usages++
 		return reg.Link
 	}
 
-	reg := &extra.Texture{Link: &tex, Usages: 1}
+	texture := tex()
+	reg := &extra.Texture{Link: &texture, Usages: 1}
 	return reg.Link
 }
 
