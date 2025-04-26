@@ -8,14 +8,11 @@ import (
 func main() {
 	process := vex.Init("FPS Counter", 400, 400)
 
-	vex.DoEvery(1000, func(iteration int) {
-		fmt.Printf("Current FPS: %d\n", vex.GetFPS())
+	label := vex.NewLabel("FPS: ?")
+	process.AddWidget(label)
 
-		if iteration == 3 {
-			process.Hide()
-		} else {
-			process.Show()
-		}
+	vex.DoEvery(1000, func(iteration int) {
+		label.Text = fmt.Sprintf("FPS: %d", vex.GetFPS())
 	})
 
 	process.Run()
