@@ -11,7 +11,7 @@ type VRect struct {
 }
 
 func (r *VRect) Render() {
-	rect := extra.GenerateFloat32Rectangle(r.X(), r.Y(), r.Width(), r.Height())
+	rect := extra.GenRec(r.X(), r.Y(), r.Width(), r.Height())
 	bgColor := r.GetStyleAsColor("background-color")
 	borderRoundness := r.GetStyleAsFloat32("border-roundness")
 	borderWidth := r.GetStyleAsInt("border-width")
