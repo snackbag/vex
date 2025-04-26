@@ -2,7 +2,7 @@ package vex
 
 import rl "github.com/gen2brain/raylib-go/raylib"
 
-var RenderThreadQueue = make(chan func())
+var RenderThreadQueue = make(chan func(), 1024)
 
 func (process *VProcess) startRenderLoop() {
 	for !rl.WindowShouldClose() {
