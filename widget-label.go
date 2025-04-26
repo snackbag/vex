@@ -9,7 +9,19 @@ type VLabel struct {
 }
 
 func (l *VLabel) Render() {
-	rl.DrawText(l.Text, l.X(), l.Y(), int32(l.GetStyleAsInt("font-size")), l.GetStyleAsColor("color"))
+	var font rl.Font
+
+	if f := Process.GetLoadedFont(l.GetStyleAsString("font-name")); f != nil {
+		font = *f
+	} else {
+		font = rl.GetFontDefault()
+	}
+
+	size := int32(l.GetStyleAsInt("font-size"))
+	color := l.GetStyleAsColor("color")
+	spacing := float32(l.GetStyleAsInt("letter-spacing"))
+
+	rl.DrawTextEx(font, l.Text, rl.NewVector2(float32(l.X()), float32(l.Y())), float32(size), spacing, color)
 }
 
 func NewLabel(text string) *VLabel {
@@ -19,5 +31,7 @@ func NewLabel(text string) *VLabel {
 
 	label.SetStyle("color", ColorAll(0))
 	label.SetStyle("font-size", 16)
+	label.SetStyle("font-name", "")
+	label.SetStyle("letter-spacing", 1)
 	return label
 }
