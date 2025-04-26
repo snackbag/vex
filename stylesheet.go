@@ -25,6 +25,8 @@ func newStyleSheet() *VStyleSheet {
 
 	// Font
 	sheet.ReserveType("font-size", extra.SVTInt)
+	sheet.ReserveType("font-name", extra.SVTString)
+	sheet.ReserveType("letter-spacing", extra.SVTInt)
 
 	// Border
 	sheet.ReserveType("border-roundness", extra.SVTFloat32)
