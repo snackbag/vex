@@ -3,6 +3,7 @@ package vex
 import (
 	"fmt"
 	rl "github.com/gen2brain/raylib-go/raylib"
+	"github.com/snackbag/vex/extra"
 	"image/color"
 	"os"
 )
@@ -17,8 +18,9 @@ type VProcess struct {
 	BackgroundColor color.RGBA
 	StyleSheet      *VStyleSheet
 
-	widgets []VWidget
-	fonts   map[string]*rl.Font
+	widgets  []VWidget
+	fonts    map[string]*rl.Font
+	textures map[string]*extra.Texture
 }
 
 func (process *VProcess) Show() {
@@ -69,12 +71,34 @@ func (process *VProcess) GetLoadedFont(name string) *rl.Font {
 	return nil
 }
 
+// RegisterOrGetTexture gets the texture from cache if path is already registered
+func (process *VProcess) RegisterOrGetTexture(tex rl.Texture2D, path string) *rl.Texture2D {
+	if reg, ok := process.textures[path]; ok {
+		reg.Usages++
+		return reg.Link
+	}
+
+	reg := &extra.Texture{Link: &tex, Usages: 1}
+	return reg.Link
+}
+
+// SafeUnloadTexture only unloads texture if not used anywhere anymore
+func (process *VProcess) SafeUnloadTexture(path string) {
+	if reg, ok := process.textures[path]; ok {
+		reg.Usages--
+		reg.PotentiallyOptimize()
+		return
+	}
+
+	rl.TraceLog(rl.LogError, fmt.Sprintf("Failed to unload texture %s, because it isn't cached", path))
+}
+
 func Init(title string, width int32, height int32) *VProcess {
 	if Process != nil {
 		panic("Cannot create multiple Vex processes")
 	}
 
-	val := &VProcess{title, width, height, ColorAll(255), newStyleSheet(), make([]VWidget, 0), make(map[string]*rl.Font)}
+	val := &VProcess{title, width, height, ColorAll(255), newStyleSheet(), make([]VWidget, 0), make(map[string]*rl.Font), make(map[string]*extra.Texture)}
 	Process = val
 	Process.StyleSheet.widgetSpecificStyles = make(map[*VWidget]map[string]interface{})
 
