@@ -10,7 +10,7 @@ func main() {
 	process.SetAllowResize(true)
 
 	image := vex.NewImage(path.Join("example", "assets", "image.png"))
-	process.AddUpdateListener(func() { // also gets called on start
+	process.RegisterOnUpdate(func() { // also gets called on start
 		image.SetSize(process.GetWidth(), 211)
 	})
 	process.AddWidget(image)

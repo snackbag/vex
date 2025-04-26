@@ -22,7 +22,7 @@ type VProcess struct {
 	fonts    map[string]*rl.Font
 	textures map[string]*extra.Texture
 
-	updateListeners []func()
+	EventHandler *VEventHandler
 }
 
 func (process *VProcess) GetWidth() int32 {
@@ -116,14 +116,8 @@ func (process *VProcess) SafeUnloadTexture(path string) {
 	rl.TraceLog(rl.LogError, fmt.Sprintf("Failed to unload texture %s, because it isn't cached", path))
 }
 
-func (process *VProcess) AddUpdateListener(listener func()) {
-	process.updateListeners = append(process.updateListeners, listener)
-}
-
-func (process *VProcess) FireUpdateListeners() {
-	for _, listener := range process.updateListeners {
-		listener()
-	}
+func (process *VProcess) RegisterOnUpdate(runnable func()) {
+	process.EventHandler.RegisterEvent("update", runnable)
 }
 
 func Init(title string, width int32, height int32) *VProcess {
@@ -131,7 +125,7 @@ func Init(title string, width int32, height int32) *VProcess {
 		panic("Cannot create multiple Vex processes")
 	}
 
-	val := &VProcess{title, width, height, ColorAll(255), newStyleSheet(), make([]VWidget, 0), make(map[string]*rl.Font), make(map[string]*extra.Texture), make([]func(), 0)}
+	val := &VProcess{title, width, height, ColorAll(255), newStyleSheet(), make([]VWidget, 0), make(map[string]*rl.Font), make(map[string]*extra.Texture), NewEventHandler()}
 	Process = val
 	Process.StyleSheet.widgetSpecificStyles = make(map[*VWidget]map[string]interface{})
 

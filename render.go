@@ -23,7 +23,7 @@ func (process *VProcess) startRenderLoop() {
 			Process.width = int32(rl.GetScreenWidth())
 			Process.height = int32(rl.GetScreenHeight())
 
-			Process.FireUpdateListeners()
+			Process.EventHandler.FireEvent("update")
 		}
 
 		rl.BeginDrawing()
