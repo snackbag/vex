@@ -1,6 +1,10 @@
 package vex
 
-import "image/color"
+import (
+	rl "github.com/gen2brain/raylib-go/raylib"
+	"github.com/snackbag/vex/extra"
+	"image/color"
+)
 
 type VWidget interface {
 	Render()
@@ -14,6 +18,7 @@ type VWidget interface {
 	SetSizeAll(all int32)
 	Width() int32
 	Height() int32
+	GenerateHitbox() rl.Rectangle
 
 	GetClasses() []string
 	SetStyle(key string, value interface{})
@@ -23,6 +28,16 @@ type VWidget interface {
 	GetStyleAsInt(key string) int
 	GetStyleAsFloat32(key string) float32
 	GetStyleAsFloat64(key string) float64
+
+	FireEvent(event string)
+	RegisterOnLeftClick(runnable func())
+	RegisterOnLeftRelease(runnable func())
+	RegisterOnMiddleClick(runnable func())
+	RegisterOnMiddleRelease(runnable func())
+	RegisterOnRightClick(runnable func())
+	RegisterOnRightRelease(runnable func())
+	RegisterOnHover(runnable func())
+	RegisterOnUnHover(runnable func())
 }
 
 type VBaseWidget struct {
@@ -33,7 +48,12 @@ type VBaseWidget struct {
 	width  int32
 	height int32
 
-	classes []string
+	classes      []string
+	EventHandler *VEventHandler
+}
+
+func NewBaseWidget() *VBaseWidget {
+	return &VBaseWidget{classes: make([]string, 0), EventHandler: NewEventHandler()}
 }
 
 func (w *VBaseWidget) Render() {
@@ -85,6 +105,10 @@ func (w *VBaseWidget) SetStyle(key string, value interface{}) {
 	Process.StyleSheet.SetKey(&w.VWidget, key, value)
 }
 
+func (w *VBaseWidget) GenerateHitbox() rl.Rectangle {
+	return extra.GenRec(w.X(), w.Y(), w.Width(), w.Height())
+}
+
 func (w *VBaseWidget) GetStyle(key string) interface{} {
 	return Process.StyleSheet.GetKeyRaw(&w.VWidget, key)
 }
@@ -107,4 +131,40 @@ func (w *VBaseWidget) GetStyleAsFloat32(key string) float32 {
 
 func (w *VBaseWidget) GetStyleAsFloat64(key string) float64 {
 	return Process.StyleSheet.GetKeyAsFloat64(&w.VWidget, key)
+}
+
+func (w *VBaseWidget) FireEvent(event string) {
+	w.EventHandler.FireEvent(event)
+}
+
+func (w *VBaseWidget) RegisterOnLeftClick(runnable func()) {
+	w.EventHandler.RegisterEvent("left-click", runnable)
+}
+
+func (w *VBaseWidget) RegisterOnLeftRelease(runnable func()) {
+	w.EventHandler.RegisterEvent("left-release", runnable)
+}
+
+func (w *VBaseWidget) RegisterOnMiddleClick(runnable func()) {
+	w.EventHandler.RegisterEvent("middle-click", runnable)
+}
+
+func (w *VBaseWidget) RegisterOnMiddleRelease(runnable func()) {
+	w.EventHandler.RegisterEvent("middle-release", runnable)
+}
+
+func (w *VBaseWidget) RegisterOnRightClick(runnable func()) {
+	w.EventHandler.RegisterEvent("right-click", runnable)
+}
+
+func (w *VBaseWidget) RegisterOnRightRelease(runnable func()) {
+	w.EventHandler.RegisterEvent("right-release", runnable)
+}
+
+func (w *VBaseWidget) RegisterOnHover(runnable func()) {
+	w.EventHandler.RegisterEvent("hover-enter", runnable)
+}
+
+func (w *VBaseWidget) RegisterOnUnHover(runnable func()) {
+	w.EventHandler.RegisterEvent("hover-leave", runnable)
 }
