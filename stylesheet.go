@@ -81,6 +81,10 @@ func (s *VStyleSheet) GetKeyAsColor(widget *VWidget, key string) color.RGBA {
 	return s.GetKeyRaw(widget, key).(color.RGBA)
 }
 
+func (s *VStyleSheet) GetKeyAsString(widget *VWidget, key string) string {
+	return s.GetKeyRaw(widget, key).(string)
+}
+
 func (s *VStyleSheet) GetKeyAsInt(widget *VWidget, key string) int {
 	return s.GetKeyRaw(widget, key).(int)
 }

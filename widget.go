@@ -89,6 +89,10 @@ func (w *VBaseWidget) GetStyleAsColor(key string) color.RGBA {
 	return Process.StyleSheet.GetKeyAsColor(&w.VWidget, key)
 }
 
+func (w *VBaseWidget) GetStyleAsString(key string) string {
+	return Process.StyleSheet.GetKeyAsString(&w.VWidget, key)
+}
+
 func (w *VBaseWidget) GetStyleAsInt(key string) int {
 	return Process.StyleSheet.GetKeyAsInt(&w.VWidget, key)
 }

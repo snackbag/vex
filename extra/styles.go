@@ -11,6 +11,7 @@ type StyleValueType int
 const (
 	SVTColor StyleValueType = iota
 	SVTInt
+	SVTString
 	SVTFloat32
 	SVTFloat64
 )
@@ -24,6 +25,13 @@ func ConvertToSVT(svt StyleValueType, key string, val any) any {
 			return val
 		} else {
 			panic(fmt.Sprintf("invalid style type for key %s: %s (expected color.RGBA{})", key, t.Name()))
+		}
+	case SVTString:
+		switch val.(type) {
+		case string:
+			return val
+		default:
+			panic(fmt.Sprintf("invalid style type for key %s: %s (expected string)", key, t.Name()))
 		}
 	case SVTInt:
 		switch val.(type) {
@@ -66,6 +74,8 @@ func GetSVT(val any) StyleValueType {
 	}
 
 	switch val.(type) {
+	case string:
+		return SVTString
 	case int, int8, int16, int32, int64:
 		return SVTInt
 	case float32:
