@@ -19,6 +19,10 @@ type VWidget interface {
 	SetStyle(key string, value interface{})
 	GetStyle(key string) interface{}
 	GetStyleAsColor(key string) color.RGBA
+	GetStyleAsString(key string) string
+	GetStyleAsInt(key string) int
+	GetStyleAsFloat32(key string) float32
+	GetStyleAsFloat64(key string) float64
 }
 
 type VBaseWidget struct {
