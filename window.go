@@ -12,8 +12,8 @@ var Process *VProcess = nil
 
 type VProcess struct {
 	Title  string
-	Width  int32
-	Height int32
+	width  int32
+	height int32
 
 	BackgroundColor color.RGBA
 	StyleSheet      *VStyleSheet
@@ -21,6 +21,28 @@ type VProcess struct {
 	widgets  []VWidget
 	fonts    map[string]*rl.Font
 	textures map[string]*extra.Texture
+
+	updateListeners []func()
+}
+
+func (process *VProcess) GetWidth() int32 {
+	return process.width
+}
+
+func (process *VProcess) GetHeight() int32 {
+	return process.height
+}
+
+func (process *VProcess) SetWidth(width int32) {
+	process.SetSize(width, process.height)
+}
+
+func (process *VProcess) SetHeight(height int32) {
+	process.SetSize(process.width, height)
+}
+
+func (process *VProcess) SetSize(width int32, height int32) {
+	rl.SetWindowSize(int(width), int(height))
 }
 
 func (process *VProcess) Show() {
@@ -94,12 +116,22 @@ func (process *VProcess) SafeUnloadTexture(path string) {
 	rl.TraceLog(rl.LogError, fmt.Sprintf("Failed to unload texture %s, because it isn't cached", path))
 }
 
+func (process *VProcess) AddUpdateListener(listener func()) {
+	process.updateListeners = append(process.updateListeners, listener)
+}
+
+func (process *VProcess) FireUpdateListeners() {
+	for _, listener := range process.updateListeners {
+		listener()
+	}
+}
+
 func Init(title string, width int32, height int32) *VProcess {
 	if Process != nil {
 		panic("Cannot create multiple Vex processes")
 	}
 
-	val := &VProcess{title, width, height, ColorAll(255), newStyleSheet(), make([]VWidget, 0), make(map[string]*rl.Font), make(map[string]*extra.Texture)}
+	val := &VProcess{title, width, height, ColorAll(255), newStyleSheet(), make([]VWidget, 0), make(map[string]*rl.Font), make(map[string]*extra.Texture), make([]func(), 0)}
 	Process = val
 	Process.StyleSheet.widgetSpecificStyles = make(map[*VWidget]map[string]interface{})
 

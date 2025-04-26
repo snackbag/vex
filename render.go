@@ -1,16 +1,29 @@
 package vex
 
-import rl "github.com/gen2brain/raylib-go/raylib"
+import (
+	rl "github.com/gen2brain/raylib-go/raylib"
+)
 
 var RenderThreadQueue = make(chan func(), 1024)
 
 func (process *VProcess) startRenderLoop() {
+	isFirstStart := true
+
 	for !rl.WindowShouldClose() {
 		select {
 		case task := <-RenderThreadQueue:
 			task()
 		default:
 
+		}
+
+		if rl.IsWindowResized() || isFirstStart {
+			isFirstStart = false
+
+			Process.width = int32(rl.GetScreenWidth())
+			Process.height = int32(rl.GetScreenHeight())
+
+			Process.FireUpdateListeners()
 		}
 
 		rl.BeginDrawing()
