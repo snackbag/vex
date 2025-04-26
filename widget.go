@@ -20,6 +20,9 @@ type VWidget interface {
 	Height() int32
 	GenerateHitbox() rl.Rectangle
 
+	IsHovered() bool
+	SetHovered(hovered bool)
+
 	GetClasses() []string
 	SetStyle(key string, value interface{})
 	GetStyle(key string) interface{}
@@ -43,10 +46,11 @@ type VWidget interface {
 type VBaseWidget struct {
 	VWidget
 
-	x      int32
-	y      int32
-	width  int32
-	height int32
+	x       int32
+	y       int32
+	width   int32
+	height  int32
+	hovered bool
 
 	classes      []string
 	EventHandler *VEventHandler
@@ -107,6 +111,23 @@ func (w *VBaseWidget) SetStyle(key string, value interface{}) {
 
 func (w *VBaseWidget) GenerateHitbox() rl.Rectangle {
 	return extra.GenRec(w.X(), w.Y(), w.Width(), w.Height())
+}
+
+func (w *VBaseWidget) IsHovered() bool {
+	return w.hovered
+}
+
+func (w *VBaseWidget) SetHovered(hovered bool) {
+	if w.hovered == hovered {
+		return
+	}
+
+	w.hovered = hovered
+	if w.hovered {
+		w.EventHandler.FireEvent("hover-enter")
+	} else {
+		w.EventHandler.FireEvent("hover-leave")
+	}
 }
 
 func (w *VBaseWidget) GetStyle(key string) interface{} {

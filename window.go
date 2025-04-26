@@ -22,7 +22,8 @@ type VProcess struct {
 	fonts    map[string]*rl.Font
 	textures map[string]*extra.Texture
 
-	EventHandler *VEventHandler
+	EventHandler      *VEventHandler
+	lastHoveredWidget VWidget
 }
 
 func (process *VProcess) GetWidth() int32 {
@@ -120,14 +121,42 @@ func (process *VProcess) RegisterOnUpdate(runnable func()) {
 	process.EventHandler.RegisterEvent("update", runnable)
 }
 
+func (process *VProcess) RegisterOnMouseMove(runnable func()) {
+	process.EventHandler.RegisterEvent("mouse-move", runnable)
+}
+
 func Init(title string, width int32, height int32) *VProcess {
 	if Process != nil {
 		panic("Cannot create multiple Vex processes")
 	}
 
-	val := &VProcess{title, width, height, ColorAll(255), newStyleSheet(), make([]VWidget, 0), make(map[string]*rl.Font), make(map[string]*extra.Texture), NewEventHandler()}
+	val := &VProcess{title, width, height, ColorAll(255), newStyleSheet(), make([]VWidget, 0), make(map[string]*rl.Font), make(map[string]*extra.Texture), NewEventHandler(), nil}
 	Process = val
 	Process.StyleSheet.widgetSpecificStyles = make(map[*VWidget]map[string]interface{})
+
+	Process.RegisterOnMouseMove(func() {
+		var last VWidget = nil
+		doIfHovered(rl.GetMouseX(), rl.GetMouseY(), func(widget VWidget) {
+			last = widget
+		})
+
+		if Process.lastHoveredWidget == last {
+			return
+		}
+
+		if last == nil && Process.lastHoveredWidget != nil {
+			if Process.lastHoveredWidget != nil {
+				Process.lastHoveredWidget.SetHovered(false)
+			}
+			Process.lastHoveredWidget = nil
+		} else if last != nil {
+			if Process.lastHoveredWidget != nil {
+				Process.lastHoveredWidget.SetHovered(false)
+			}
+			Process.lastHoveredWidget = last
+			Process.lastHoveredWidget.SetHovered(true)
+		}
+	})
 
 	rl.SetTraceLogLevel(rl.LogError)
 	rl.SetConfigFlags(rl.FlagMsaa4xHint)

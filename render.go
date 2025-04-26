@@ -8,6 +8,7 @@ var RenderThreadQueue = make(chan func(), 1024)
 
 func (process *VProcess) startRenderLoop() {
 	isFirstStart := true
+	hasMouseMoved := false
 	prevMouseStateLeft := false
 	prevMouseStateMiddle := false
 	prevMouseStateRight := false
@@ -21,42 +22,51 @@ func (process *VProcess) startRenderLoop() {
 		}
 
 		if rl.IsWindowResized() || isFirstStart {
-			isFirstStart = false
-
 			Process.width = int32(rl.GetScreenWidth())
 			Process.height = int32(rl.GetScreenHeight())
 
 			Process.EventHandler.FireEvent("update")
 		}
 
+		mouseX := rl.GetMouseX()
+		mouseY := rl.GetMouseY()
+
 		if rl.IsMouseButtonPressed(rl.MouseButtonLeft) && !prevMouseStateLeft {
 			prevMouseStateLeft = true
-			fireEventIfHovered(rl.GetMouseX(), rl.GetMouseY(), "left-click")
+			fireEventIfHovered(mouseX, mouseY, "left-click")
 		}
 
 		if rl.IsMouseButtonReleased(rl.MouseButtonLeft) && prevMouseStateLeft {
 			prevMouseStateLeft = false
-			fireEventIfHovered(rl.GetMouseX(), rl.GetMouseY(), "left-release")
+			fireEventIfHovered(mouseX, mouseY, "left-release")
 		}
 
 		if rl.IsMouseButtonPressed(rl.MouseButtonMiddle) && !prevMouseStateMiddle {
 			prevMouseStateMiddle = true
-			fireEventIfHovered(rl.GetMouseX(), rl.GetMouseY(), "middle-click")
+			fireEventIfHovered(mouseX, mouseY, "middle-click")
 		}
 
 		if rl.IsMouseButtonReleased(rl.MouseButtonMiddle) && prevMouseStateMiddle {
 			prevMouseStateMiddle = false
-			fireEventIfHovered(rl.GetMouseX(), rl.GetMouseY(), "middle-release")
+			fireEventIfHovered(mouseX, mouseY, "middle-release")
 		}
 
 		if rl.IsMouseButtonPressed(rl.MouseButtonRight) && !prevMouseStateRight {
 			prevMouseStateRight = true
-			fireEventIfHovered(rl.GetMouseX(), rl.GetMouseY(), "right-click")
+			fireEventIfHovered(mouseX, mouseY, "right-click")
 		}
 
 		if rl.IsMouseButtonReleased(rl.MouseButtonRight) && prevMouseStateRight {
 			prevMouseStateRight = false
-			fireEventIfHovered(rl.GetMouseX(), rl.GetMouseY(), "right-release")
+			fireEventIfHovered(mouseX, mouseY, "right-release")
+		}
+
+		if hasMouseMoved {
+			Process.EventHandler.FireEvent("mouse-move")
+		}
+
+		if !hasMouseMoved && mouseX != 0 && mouseY != 0 {
+			hasMouseMoved = true
 		}
 
 		rl.BeginDrawing()
@@ -67,6 +77,7 @@ func (process *VProcess) startRenderLoop() {
 		}
 
 		rl.EndDrawing()
+		isFirstStart = false
 	}
 }
 
@@ -74,6 +85,14 @@ func fireEventIfHovered(x int32, y int32, event string) {
 	for _, widget := range Process.widgets {
 		if rl.CheckCollisionPointRec(rl.NewVector2(float32(x), float32(y)), widget.GenerateHitbox()) {
 			widget.FireEvent(event)
+		}
+	}
+}
+
+func doIfHovered(x int32, y int32, runnable func(widget VWidget)) {
+	for _, widget := range Process.widgets {
+		if rl.CheckCollisionPointRec(rl.NewVector2(float32(x), float32(y)), widget.GenerateHitbox()) {
+			runnable(widget)
 		}
 	}
 }
