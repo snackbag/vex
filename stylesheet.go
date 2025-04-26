@@ -20,6 +20,7 @@ func newStyleSheet() *VStyleSheet {
 	}
 
 	// Generic
+	sheet.ReserveType("color", extra.SVTColor)
 	sheet.ReserveType("background-color", extra.SVTColor)
 
 	// Border
