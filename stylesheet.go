@@ -23,6 +23,9 @@ func newStyleSheet() *VStyleSheet {
 	sheet.ReserveType("color", extra.SVTColor)
 	sheet.ReserveType("background-color", extra.SVTColor)
 
+	// Font
+	sheet.ReserveType("font-size", extra.SVTInt)
+
 	// Border
 	sheet.ReserveType("border-roundness", extra.SVTFloat32)
 	sheet.ReserveType("border-width", extra.SVTInt)
