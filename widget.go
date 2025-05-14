@@ -71,7 +71,7 @@ func (w *VBaseWidget) Y() int32 {
 	return w.y
 }
 
-func (w *VBaseWidget) move(x int32, y int32) {
+func (w *VBaseWidget) Move(x int32, y int32) {
 	w.x = x
 	w.y = y
 }
